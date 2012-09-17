@@ -1,0 +1,2 @@
+#!/bin/bash
+./osx-dist/bin/assignment1-osx --test-interps sample-test-suite/

@@ -1,0 +1,7 @@
+#!/bin/bash
+/Users/ih/Google\ Drive/brown-cs173/assignment1/osx-dist/bin/assignment1-osx --interp < $1
+/Users/ih/Google\ Drive/brown-cs173/assignment1/osx-dist/bin/assignment1-osx --interp < $1 1> $1.expected 2> $1.error
+
+mv $1* sample-test-suite
+
+./osx-dist/bin/assignment1-osx --test-interps sample-test-suite/

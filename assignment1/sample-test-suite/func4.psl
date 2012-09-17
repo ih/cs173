@@ -1,0 +1,5 @@
+defvar f = lambda(y) {
+      print(y);
+} in {
+  f();
+}

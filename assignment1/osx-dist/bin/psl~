@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./debian-dist/bin/assignment1-debian --interp < $1

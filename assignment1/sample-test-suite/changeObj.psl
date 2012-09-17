@@ -1,0 +1,8 @@
+defvar x = {y:3} in {
+  print(x);
+  print("\n");
+  print(x.y);
+  x = 3;
+  print(x);
+  print(x.y);     
+}

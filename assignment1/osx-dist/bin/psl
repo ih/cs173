@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/Users/ih/Google\ Drive/brown-cs173/assignment1/osx-dist/bin/assignment1-osx --interp < $1

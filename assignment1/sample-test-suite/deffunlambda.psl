@@ -1,0 +1,6 @@
+defvar f = lambda(n, m){
+  if <(n, 1) then 0 else +(f(-(n,1),m),m);
+}
+in {
+  f(3,4)
+}

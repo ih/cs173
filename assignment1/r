@@ -1,0 +1,2 @@
+./osx-dist/bin/assignment1-osx --report sample-test-suite/ > report1.txt
+zip -r test-suite sample-test-suite
