@@ -16,7 +16,7 @@
   [ifC (condition : ExprC) (branch1 : ExprC) (branch2 : ExprC)]
   [idC (s : symbol)]
   [appC (fun : ExprC) (argument : ExprC)]
-  [fdC (name : symbol) (arg : symbol) (body : ExprC)])
+  [lambdaC (arg : symbol) (body : ExprC)])
 
 (define-type ExprS
   [numS (n : number)]
@@ -34,10 +34,10 @@
   [bind (variable : symbol) (value : Value)])
 
 (define-type-alias Env (listof Binding))
-
+;closures capture the environment at the moment of function definition
 (define-type Value
   [numV (n : number)]
-  [funV (name : symbol) (arg : symbol) (body : ExprC)])
+  [closV (arg : symbol) (body : ExprC) (env : Env)])
 
 (define mt-env empty)
 (define extend-env cons)
@@ -67,11 +67,11 @@
     [idC (s) (lookup s environment)]
     [appC (fun arg) (local ([define fun-def (interpret fun environment)]) 
                       (interpret 
-                         (funV-body fun-def)
-                         (extend-env (bind (funV-arg fun-def) 
+                         (closV-body fun-def)
+                         (extend-env (bind (closV-arg fun-def) 
                                            (interpret arg environment)) 
-                                     mt-env)))]
-    [fdC (name arg body) (funV name arg body)]))
+                                     (closV-env fun-def))))]
+    [lambdaC (arg body) (closV arg body environment)]))
 
 (define (num+ [l : Value] [r : Value]) : Value
   (cond 
@@ -121,16 +121,19 @@
         [else (lookup name (rest env))]))
 
 
-(test (interpret (plusC (numC 10) (appC (fdC 'const5 '_ (numC 5)) (numC 10)))
+(test (interpret (plusC (numC 10) (appC (lambdaC '_ (numC 5)) (numC 10)))
               mt-env)
       (numV 15))
  
-(test/exn (interpret (appC (fdC 'f1 'x (appC (fdC 'f2 'y (plusC (idC 'x) (idC 'y)))
+(test (interpret (appC (lambdaC 'x (appC (lambdaC 'y (plusC (idC 'x) (idC 'y)))
                                           (numC 4)))
                         (numC 3))
                   mt-env)
-          "lookup: variable not found")
+          (numV 7))
 
+(interpret (appC (appC (lambdaC 'f (lambdaC 'x (appC (idC 'f) (numC 10)))) 
+                 (lambdaC 'y (plusC (idC 'x) (idC 'y))))
+                 (numC 5)) mt-env)
 ;(test (interpret (plusC (numC 10) (appC 'const5 (numC 10)))
 ;                 mt-env
 ;              (list (fdC 'const5 '_ (numC 5)))) 15)
